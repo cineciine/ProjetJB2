@@ -13,7 +13,7 @@ namespace ProjetJB2.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201805251705473_Initial"; }
+            get { return "201805271213381_Initial"; }
         }
         
         string IMigrationMetadata.Source

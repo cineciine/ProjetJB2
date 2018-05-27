@@ -11,112 +11,116 @@ using ProjetJB2.Models;
 
 namespace ProjetJB2.Controllers
 {
-    public class ProjectController : Controller
+    public class TaskController : Controller
     {
         private ProjetJB2Context db = new ProjetJB2Context();
 
-        // GET: Project
+        // GET: Task
         public async Task<ActionResult> Index()
         {
-            var projects = db.Projects.Include(p => p.Teacher);
-            return View(await projects.ToListAsync());
+            var tasks = db.Tasks.Include(t => t.Project).Include(t => t.Student);
+            return View(await tasks.ToListAsync());
         }
 
-        // GET: Project/Details/5
+        // GET: Task/Details/5
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Project project = await db.Projects.FindAsync(id);
-            if (project == null)
+            Models.Task task = await db.Tasks.FindAsync(id);
+            if (task == null)
             {
                 return HttpNotFound();
             }
-            return View(project);
+            return View(task);
         }
 
-        // GET: Project/Create
+        // GET: Task/Create
         public ActionResult Create()
         {
-            ViewBag.TeacherId = new SelectList(db.Teachers, "Id", "LastName");
+            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
+            ViewBag.StudentId = new SelectList(db.Students, "Id", "LastName");
             return View();
         }
 
-        // POST: Project/Create
+        // POST: Task/Create
         // Afin de déjouer les attaques par sur-validation, activez les propriétés spécifiques que vous voulez lier. Pour 
         // plus de détails, voir  https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,TeacherId,BeginDate,EndDate")] Project project)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Description,BeginDate,EndDate,State,ProjectId,StudentId")] Models.Task task)
         {
             if (ModelState.IsValid)
             {
-                db.Projects.Add(project);
+                db.Tasks.Add(task);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.TeacherId = new SelectList(db.Teachers, "Id", "LastName", project.TeacherId);
-            return View(project);
+            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", task.ProjectId);
+            ViewBag.StudentId = new SelectList(db.Students, "Id", "LastName", task.StudentId);
+            return View(task);
         }
 
-        // GET: Project/Edit/5
+        // GET: Task/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Project project = await db.Projects.FindAsync(id);
-            if (project == null)
+            Models.Task task = await db.Tasks.FindAsync(id);
+            if (task == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.TeacherId = new SelectList(db.Teachers, "Id", "LastName", project.TeacherId);
-            return View(project);
+            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", task.ProjectId);
+            ViewBag.StudentId = new SelectList(db.Students, "Id", "LastName", task.StudentId);
+            return View(task);
         }
 
-        // POST: Project/Edit/5
+        // POST: Task/Edit/5
         // Afin de déjouer les attaques par sur-validation, activez les propriétés spécifiques que vous voulez lier. Pour 
         // plus de détails, voir  https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,TeacherId,BeginDate,EndDate")] Project project)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Description,BeginDate,EndDate,State,ProjectId,StudentId")] Models.Task task)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(project).State = EntityState.Modified;
+                db.Entry(task).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.TeacherId = new SelectList(db.Teachers, "Id", "LastName", project.TeacherId);
-            return View(project);
+            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", task.ProjectId);
+            ViewBag.StudentId = new SelectList(db.Students, "Id", "LastName", task.StudentId);
+            return View(task);
         }
 
-        // GET: Project/Delete/5
+        // GET: Task/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Project project = await db.Projects.FindAsync(id);
-            if (project == null)
+            Models.Task task = await db.Tasks.FindAsync(id);
+            if (task == null)
             {
                 return HttpNotFound();
             }
-            return View(project);
+            return View(task);
         }
 
-        // POST: Project/Delete/5
+        // POST: Task/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Project project = await db.Projects.FindAsync(id);
-            db.Projects.Remove(project);
+            Models.Task task = await db.Tasks.FindAsync(id);
+            db.Tasks.Remove(task);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
