@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace ProjetJB2.Models
 {
@@ -12,5 +13,7 @@ namespace ProjetJB2.Models
         public virtual Teacher Teacher { get; set; }
         public DateTime BeginDate { get; set; }
         public DateTime EndDate { get; set; }
-}
+        //public String Controller { get; set; }
+        
+    }
 }
