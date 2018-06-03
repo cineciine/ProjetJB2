@@ -31,7 +31,7 @@
                     <li>@Html.ActionLink("Tasks", "Index", "Task", new { area = "" }, null)</li>
                     <li>@Html.ActionLink("Steps", "Index", "Step", new { area = "" }, null)</li>
                     <li>@Html.ActionLink("Help", "Index", "Help", new { area = "" }, null)</li>
-                    <li>
+                    <li style="top: 12px;">
                         @using (Html.BeginForm("Index", "Project", FormMethod.Get))
                         {
                             @Html.TextBox("SearchString")
